@@ -1,0 +1,202 @@
+\documentclass{article}
+
+\usepackage[framed, numbered]{matlab-prettifier}
+\usepackage{amsmath, amssymb, amsthm, fullpage}
+\usepackage{booktabs, threeparttable} % Needed for table
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{multicol}
+
+\hypersetup{colorlinks = true, citecolor = {red}}
+
+\definecolor{lightgray}{gray}{0.5} % For the Matlab output
+
+\title{MATH 4220 \\ Assignment \# 6}
+\author{Jarren Ralf}
+\date{Due On: December 2, 2018}
+
+\begin{document}
+	\maketitle
+	
+	\begin{enumerate}[label = {\arabic*}]
+		\item Prove the mean value theorem for integrals, as stated below: \\
+		
+		Assume that $g \in \mathcal{C}[a, b]$ and that $\psi$ is an integrable function that is either nonnegative or nonpositive throughout the interval $[a, b]$. Then there exists $\xi \in [a, b]$ such that \[ \int_{a}^{b} g(x) \psi(x) \, \mathrm{d}x = g(\xi) \int_{a}^{b} \psi(x) \, \mathrm{d}x. \] Hint: use the Intermediate Value Theorem.
+		
+		\begin{proof}
+			Assume that $g \in \mathcal{C}[a, b]$ and that $\psi$ is an integrable function that is either nonnegative or nonpositive throughout the interval $[a, b]$. Suppose $g$ is a bounded function on $[a, b]$. By definition of bounded, there exists $\hat{a}, \hat{b} \in [a, b]$ such that $g(\hat{a}) = \min g$ and $g(\hat{b}) = \max g$. Thus we have
+			\[\setlength\arraycolsep{1pt}
+				\begin{array}{rccl}
+					\vspace{2pt}
+					g(\hat{a}) &\leq& g(x) &\leq g(\hat{b}) \\
+					\vspace{2pt}
+					g(\hat{a})\psi(x) &\leq& g(x)\psi(x) &\leq g(\hat{b})\psi(x) \\
+					\vspace{2pt}
+					\displaystyle\int_{a}^{b} g(\hat{a}) \psi(x) \,\mathrm{d}x &\leq& \displaystyle\int_{a}^{b} g(x) \psi(x) \,\mathrm{d}x &\leq \displaystyle\int_{a}^{b} g(\hat{b})\psi(x) \,\mathrm{d}x\\
+					\vspace{2pt}
+					g(\hat{a}) \displaystyle\int_{a}^{b} \psi(x) \,\mathrm{d}x &\leq& \displaystyle\int_{a}^{b} g(x) \psi(x) \,\mathrm{d}x &\leq g(\hat{b}) \displaystyle\int_{a}^{b} \psi(x) \,\mathrm{d}x\\
+					\vspace{2pt}
+					g(\hat{a}) &\leq& \frac{\displaystyle\int_{a}^{b} g(x) \psi(x) \, \mathrm{d}x}{\displaystyle\int_{a}^{b}\psi(x) \,\mathrm{d}x} &\leq g(\hat{b}).\\
+				\end{array}
+			\]
+			Then, by the Intermediate Value Theorem, there exists $\xi \in [a, b]$, such that \[ g(\xi) = \frac{\displaystyle\int_{a}^{b} g(x) \psi(x) \, \mathrm{d}x}{\displaystyle\int_{a}^{b}\psi(x) \,\mathrm{d}x}. \] This implies that \[ \int_{a}^{b} g(x) \psi(x) \, \mathrm{d}x = g(\xi) \int_{a}^{b} \psi(x) \, \mathrm{d}x. \]
+		\end{proof}
+	
+		\pagebreak
+		
+		\item Write a MATLAB program that computes an integral numerically, using the composite trapezoidal, midpoint and Simpson methods. Input for the program consists of the integrand, the ends of the integration interval, and the number of (uniformly spaced) subintervals. Apply your program to the two following integrals:
+		\begin{enumerate}
+			\item $\int_{0}^{1} \frac{4}{1 + x^2} \, \mathrm{d}x$
+			\item $\int_{0}^{1} \sqrt{x} \, \mathrm{d}x$
+		\end{enumerate}
+		
+		Use $r = 2, 4, 8, 16, 32$ subintervals. For each of the integrals, explain the behaviour of the error by observing how it is reduced each time the number of subintervals is doubled, and how large it is, compared to analytical bounds on the error. As much as you can, compare the performance of the methods to each other, taking into consideration both the error and the number of function evaluations. The exact values of the above integrals are $\pi$ and $2/3$, respectively.
+		
+		\lstinputlisting[style = MATLAB-editor, basicstyle = \mlttfamily\scriptsize, caption = {Function that approximates integrals using Trapezoidal, Midpoint, and Simpson's Rule}]{numericalIntegration.m}
+		
+		\pagebreak
+		
+		\lstinputlisting[style = MATLAB-editor, basicstyle = \mlttfamily\scriptsize, linerange = {6 - 80}, caption = {MATLAB code that approximates the integrals of given functions}]{assignment6.m}
+		
+		\pagebreak
+		
+		\begin{multicols}{2}
+			\color{lightgray}
+			\begin{scriptsize}
+				\begin{verbatim}
+					For function 1:
+					The true value of the integral is 3.14159265358979312
+					
+					r    trapezoidal      midpoint         Simpson's
+					2    3.100000000000 	 3.162352941176 	 3.133333333333 
+					4    3.131176470588 	 3.146800518394 	 3.141568627451 
+					8    3.138988494491 	 3.142894729592 	 3.141592502459 
+					16 	 3.140941612041 	 3.141918174309 	 3.141592651225 
+					32 	 3.141429893175 	 3.141674033796 	 3.141592653553 
+					
+					ERROR ESTIMATES:
+					r    trapezoidal      midpoint         Simpson's
+					2    0.166666662297 	 0.083333331148 	 0.014062500000 
+					4    0.041666665574 	 0.020833332787 	 0.000878906250 
+					8    0.010416666394 	 0.005208333197 	 0.000054931641 
+					16 	 0.002604166598 	 0.001302083299 	 0.000003433228 
+					32 	 0.000651041650 	 0.000325520825 	 0.000000214577 
+					
+					ABSOLUTE ERROR:
+					r    trapezoidal      midpoint         Simpson's
+					2    0.041592653590 	 0.020760287587 	 0.008259320256 
+					4    0.010416183002 	 0.005207864804 	 0.000024026139 
+					8    0.002604159099 	 0.001302076002 	 0.000000151131 
+					16 	 0.000651041548 	 0.000325520719 	 0.000000002365 
+					32 	 0.000162760415 	 0.000081380207 	 0.000000000037 
+					
+					For function 2:
+					The true value of the integral is  0.6666666666666666
+					
+					r    trapezoidal      midpoint         Simpson's
+					2    0.603553390593 	 0.683012701892 	 0.638071187458 
+					4    0.643283046243 	 0.672977397006 	 0.656526264793 
+					8    0.658130221624 	 0.669032172130 	 0.663079280085 
+					16 	 0.663581196877 	 0.667536675681 	 0.665398188628 
+					32 	 0.665558936279 	 0.666982686478 	 0.666218182746 
+					
+					ERROR ESTIMATES:
+					r    trapezoidal      midpoint         Simpson's
+					2    0.005208684312 	 0.002604342156 	 0.000325569217 
+					4    0.001302171078 	 0.000651085539 	 0.000020348076 
+					8    0.000325542770 	 0.000162771385 	 0.000001271755 
+					16 	 0.000081385692 	 0.000040692846 	 0.000000079485 
+					32 	 0.000020346423 	 0.000010173212 	 0.000000004968 
+					
+					ABSOLUTE ERROR:
+					r    trapezoidal      midpoint         Simpson's
+					2    0.063113276073 	 0.016346035226 	 0.028595479209 
+					4    0.023383620424 	 0.006310730339 	 0.010140401874 
+					8    0.008536445042 	 0.002365505463 	 0.003587386582 
+					16 	 0.003085469789 	 0.000870009014 	 0.001268478039 
+					32 	 0.001107730388 	 0.000316019811 	 0.000448483920 
+				\end{verbatim}
+			\end{scriptsize}	
+			\color{black}
+		\end{multicols}
+		
+		\hspace{15pt} For integral (a), $\int_{0}^{1} \frac{4}{1 + x^2} \, \mathrm{d}x$, the error in each approximation is reduced when the number of sub-intervals is doubled. For the trapezoidal method, there is not quite one decimal place of accuracy gained with each iteration we performed, but rather maybe an average of half a decimal. The midpoint approximation actually behaves similarly, but, it is clearly a little bit better than the trapezoidal rule. Lastly, simpson's method clearly dominates the first two. Not only does it start with an approximation that is much closer than the previous two, each time the number of sub-intervals is doubled, more that two full decimal places are gained in accuracy each time. It is also worth noting that all of the methods outperform their own error estimations. What could be a possible explanation? Each of the error terms is based on either $f''(\xi)$ or $f''''(\xi)$, but since these values of $\xi$ are unknown, we bounded the error by taking the maximum of the function. This clearly lead to an error estimate that is a bit too large. That being said, the estimates for trapezoidal and midpoint are only within one decimal place of the calculated absolute error. The estimate for Simpson's error is much different than the calculated version.
+		
+		\hspace{15pt} For integral (b), $\int_{0}^{1} \sqrt{x} \, \mathrm{d}x$, increasing the number of sub-intervals indeed decreases the error. The trapezoidal and midpoint rules perform as well as they did for integral (a), however, simpson's rule under performs stunningly. It gains about half a decimal of accuracy, juxtaposed with it's performs of two full decimals for the first integral. In fact, simpson's method is a worse approximation of the integral in (b) than the midpoint rule. It does marginally outperform the trapezoidal rule however. The trapezoidal method gains less than half a digit of accuracy each time the sub-intervals are double. Again, it gives the worse performance of the three approximations. Each of the error estimates are different by a more significant amount compared to part (a). The same argument for why this is could be applied. For both trapezoidal and midpoint, the estimates seem to be less than one order of accuracy, we could postulate above one half. The midpoint error estimate is a couple digits off compared to the calculated absolute error. The trapezoidal rule, however, has an increasing disparity between the estimate and calculated error. It begins approximately one decimal different, and by the time the interval has been double four times, the absolute error is less than the estimated error by about two decimal places.
+		
+		\hspace{15pt} Let's break down how many function evaluations there are for each method. Starting with the trapezoidal rule, the formula is as follows \[\int_{a}^{b} f(x) \,\mathrm{d}x \approx \frac{h}{2} \left[f(a) + 2 \sum_{i = 1}^{r - 1} f(a + ih) + f(b)\right].\] Observe that the sum in the middle of the formula will have $r - 1$ terms to add up and for each of these, there is one function evaluation. Additionally, the left and right endpoints are evaluated, therefore we are left with a total of $r + 1$ function evaluations. Next, for the composite midpoint rule, defined as \[\int_{a}^{b} f(x) \,\mathrm{d}x \approx h \sum_{i = 1}^{r} f(a + (i - 1/2)h),\] there are $r$ terms in the sum, and thus $r$, function evaluations. Lastly, Simpson's method is \[\int_{a}^{b} f(x) \,\mathrm{d}x \approx \frac{h}{3} \left[f(a) + 2 \sum_{k = 1}^{r/2 - 1} f(t_{2k}) + 4 \sum_{k = 1}^{r/2} f(t_{2k - 1}) + f(b)\right].\] The first sum yields $r/2 - 1$ function evaluations, while the second sum yields $r/2.$ Along with the evaluations at the endpoints, we observe that the total function evaluations is $r + 1$.
+		
+		\hspace{15pt} We know that however computationally expensive a calculation becomes, that function evaluations are more costly than elementary operations. Strictly on this criteria, the midpoint rule would be less computationally expensive than the other two. Observing the formula above, simpson's method is the most expensive of the given three methods because of the presence of a few more elementary operations. In conclusion, as long as simpson's rule is not significantly slower than the other two methods, then it is the best choice because of its high order of accuracy. Although, just like the example of integral (b), there would be some cases such that the midpoint approximation would be a more accurate choice, while simultaneously being the fastest method. The user should also consider whether they want to run the methods until a certain tolerance level is met. Because if this is the case, the fact that Simpson's method usually converges to the answer rather quickly suggest a fewer number of function evaluation would be executed. Of course, if the scenario was such that the midpoint rule was more accurate, then this method would have much fewer function evaluations because it already has one less per number of sub-intervals. \\
+		
+		\item Write a short MATLAB program that will find the $n + 1$ Gauss points on the interval $[-1, 1]$ for each $n = 0, 1, \dots, 9$. You may use MATLAB's roots function. Display these points in one (nice looking) plot. Describe a composite quadrature method of order 20. \\
+		
+		\lstinputlisting[style = MATLAB-editor, basicstyle = \mlttfamily\scriptsize, linerange = {87 - 110}, caption = {MATLAB code used to find $n + 1$ the Gauss points on the gieven interval }]{assignment6.m}
+		
+		\pagebreak
+		
+		\begin{figure}[h!]
+			\centering
+			\caption{Graph of Gauss Points for various values of $n$}
+			\includegraphics[width = \linewidth]{3.png}
+		\end{figure}
+	
+		\hspace{15pt} First, consider that our intuition for creating a higher order rule is using more subintervals. In particular, if we choose more Gauss points, then maybe we have a solution. Let's explore this strategy.
+		
+		\hspace{15pt} The general form of a weighted Gaussian quadrature rule is \[ \int_{a}^{b} f(x) w(x) \,\mathrm{d}x = \sum_{j = 0}^{n} a_j f(x_j) \] where the parameters $x_j$ and $a_j$ are determined by maximizing the precision of the integral. In order to to use this quadrature as a composite method, we evaluate $f$ at the following distinct points and using the following chosen weights,
+		\begin{align*}
+			t_{i, k} &= t_{i - 1} + \frac{t_i - t_{i - 1}}{2} (x_k + 1) &&\text{and}& a_j &= \frac{2(1 - x_j^2)}{[(n + 1) \phi_n(x_j)]^2}, \quad j = 0, 1, \dots, n.
+		\end{align*}
+		Notice that the $t_{i,k}$ are the $x_j$ for the original Gaussian quadrature formula. Recall that this notation is used to describe the abscissae for composite methods. As long as the mesh is uniform, the error in obtaining the composite Gaussian rule is estimated by \[ E_{n, h} = \frac{(b - a)((n + 1)!)^4}{(2n + 3)((2n + 2)!)^2}f^{(2n + 2)}(\xi) h^{2n + 2}. \] We know that if we want a quadrature method of order 20, the exponent on the $h$ needs to be 20. Thus, $2n + 2 = 20 \implies 2n = 18 \implies n = 9.$ This suggests that the first step for creating a composite Gaussian quadrature method of order 20, we need to find the Gauss points corresponding to the zeros of the degree 10 Legrende polynomial. Then the 11 Gauss points are scaled and used in each subinterval to form a set of $11r$ distinct points for $r$ subintervals.
+		
+		\pagebreak
+		
+		\item Suppose that the interval of integration $[a, b]$ is divided into equal subintervals of length $h$ each such that $r = (b - a)/h$ is even. Denote by $R_1$ the result of applying the composite trapezoidal method with step size $2h$ and by $R_2$ the result of applying the same method with step size $h$. Show that one application of Richardson extrapolation, reading \[S = \frac{4R_2 - R_1}{3}\] yields the composite Simpson's method.
+		
+		\begin{proof}
+			Suppose that the interval of integration $[a, b]$ is divided into equal subintervals of length $h$ each such that $r = (b - a)/h$ is even. Denote by $R_1$ the result of applying the composite trapezoidal method with step size $2h$ and by $R_2$ the result of applying the same method with step size $h$. Then by using one application of Richardson extrapolation, we get \\
+			\begin{align*}
+				S &= \frac{4 R_2 - R_1}{3} \\
+				  &= \frac{1}{3} \left( 4 \cdot \frac{h}{2} \left[ f(a) + 2 \sum_{i = 1}^{r - 1} f(a + ih) + f(b) \right] - \frac{(2h)}{2} \left[ f(a) + 2 \sum_{i = 1}^{\frac{r - 1}{2}} f\Big(a + i(2h) \Big) + f(b) \right] \right) \\
+				  &= \frac{h}{3} \left( 2 \left[ f(a) + 2 \sum_{i = 1}^{r - 1} f(a + ih) + f(b) \right] - \left[ f(a) + 2 \sum_{i = 1}^{\frac{r - 1}{2}} f(a + 2ih) + f(b) \right] \right) \\
+				  &= \frac{h}{3} \left[ 2 f(a) + 4 \sum_{i = 1}^{r - 1} f(a + ih) + 2f(b) - f(a) - 2 \sum_{i = 1}^{\frac{r - 1}{2}} f(a + 2ih) - f(b) \right] \\
+				  &= \frac{h}{3} \left[ f(a) + 4 \sum_{i = 1}^{r - 1} f(a + ih) - 2 \sum_{i = 1}^{\frac{r - 1}{2}} f(a + 2ih) + f(b) \right] \\
+				  &= \frac{h}{3} \left[ f(a) + 4 \sum_{i = 1}^{\frac{r}{2}} f\Big(a + (2i - 1)h \Big) + 2 \sum_{i = 1}^{\frac{r}{2} - 1} f(a + 2ih) + f(b) \right] \\
+				  &= \frac{h}{3} \left[ f(a) + 2 \sum_{i = 1}^{\frac{r}{2} - 1} f(a + 2ih) + 4 \sum_{i = 1}^{\frac{r}{2}} f\Big(a + (2i - 1)h \Big) + f(b) \right].
+			\end{align*}
+			Re-index the sums with $k$. Finally, denote the even points, $a + 2ih$ by, $t_{2k}$ and the odd points, $a + (2i - 1)h$ by $t_{2k - 1}$. Thus, we have derived \[ S = \frac{h}{3} \left[ f(a) + 2 \sum_{k = 1}^{r/2 - 1} f(t_{2k}) + 4 \sum_{k = 1}^{r/2} f(t_{2k - 1}) + f(b) \right]. \] Therefore, one application of Richardson extrapolation yields the composite Simpson's method.
+		\end{proof}
+		
+		\pagebreak
+		
+		\item Using Romberg integration, compute to 8 digits (i.e. with a precision of $t = 8$) by obtaining approximations of the integral \[ \pi = \int_{0}^{1} \frac{4}{1 + x^2} \, \mathrm{d}x \] with MATLAB. Describe your solution approach and provide the appropriate Romberg table.
+		
+		\lstinputlisting[style = MATLAB-editor, basicstyle = \mlttfamily\scriptsize, linerange = {116 - 150}, caption = {MATLAB code used to perform Romberg integration}]{assignment6.m}
+		
+		\begin{table}[!h]
+			\centering
+			\begin{threeparttable}
+				\caption{Romberg Table}
+				\begin{tabular}{c c c c c}
+					$\mathcal{O}(h^2)$ & $\mathcal{O}(h^4)$ & $\mathcal{O}(h^6)$ & $\mathcal{O}(h^8)$ & $\mathcal{O}(h^{10})$ \\
+					\midrule
+					\vspace{10pt}
+					3.0000000000 & & & & \\
+					\vspace{10pt}
+					3.1000000000 & 3.1333333333 & & & \\
+					\vspace{10pt}
+					3.1311764706 & 3.1415686275 & 3.1421176471 & & \\
+					\vspace{10pt}
+					3.1389884945 & 3.1415925025 & 3.1415940941 & 3.1415857838 & \\
+					\vspace{10pt}
+					3.1409416120 & 3.1415926512 & 3.1415926611 & 3.1415926384 & 3.1415926653
+				\end{tabular}
+			\label{tb:table1}
+			\end{threeparttable}
+		\end{table}
+		
+		\hspace{15pt} My solution approach was to copy and paste Louis Saumier's Math4220\_Lesson\_7\_Code for implementing Romberg integration, and make minimal changes to suit my example. The first step in coding this question is initializing the first term in the table. This value is obtained by deploying an instance of definite integral approximation using the trapezoidal rule. For my code, I was able to obtain this approximation from a function I created called \texttt{numericalIntegration()}. Next an iterative process is defined which populates the rest of the table based on previous elements. The algorithm deployed her is outlined in detail on page 471 of our textbook.
+		
+		\hspace{15pt} The first change that needed to be made from Louis' in-class example was that not enough digits were being displayed in the output. This means the accuracy could not be observed by printing the result from matlab. Changing the format to \texttt{long} at the top of the code was the solution. According to MathWorks when you set the format to \texttt{long} the display will print ``with 15 digits after the decimal point for double values." Recall that our goal to print an answer that is accurate to a precision of $t = 8$. From the definition of floating point representation of a number, we know that we want our approximation to match the first 8 digits, in the case of $\pi$, we want to see the first digit, 3, and then 7 more identical digits after the decimal place. When using the positive integer $s$ to be equal to 4 in the code, our result was not accurate enough. This was determined simply by observing the values printed in the table and counting how many digits were similar to the correct representation of $\pi$ (at least more accurate). Next we tried incrementing $s$ by one to achieve a more accurate approximation. This led to an acceptable answer. Observe in Table \ref{tb:table1}, that the entry in the bottom right of the table has 8 digits of accuracy. Notice that the integer $s$ is representative of the number of rows and columns of the Romberg table. The relationship between this number and the order of accuracy is, $\mathcal{O}(h^{2s})$. Hence for our example, since $s = 5$, then $\mathcal{O}(h^{2s}) \implies \mathcal{O}(h^{10})$, which is an order of accuracy of 10.
+	\end{enumerate}
+\end{document}
